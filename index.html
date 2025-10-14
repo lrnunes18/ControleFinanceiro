@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Controle Financeiro - Modern V6.4</title>
+  <title>Controle Financeiro</title>
   <link id="favicon" rel="icon" href="">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -58,7 +58,7 @@
     .app-sidebar .nav-link.active{background:var(--accent);color:white; font-weight: 600;}
     .sidebar-badge { background-color: var(--exp); color: white; font-size: 0.7rem; font-weight: 600; padding: 2px 6px; border-radius: 10px; }
     
-    #horizontal-container{display:flex;flex-grow:1;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth; -webkit-overflow-scrolling:touch; height: calc(100vh - 72px);}
+    #horizontal-container{display:flex;flex-grow:1;overflow-x:auto;scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; height: calc(100vh - 72px);}
     .page{width:100%;flex-shrink:0;scroll-snap-align:start;overflow-y:auto;padding:1.5rem;box-sizing:border-box;}
     .section-title{display:block;text-align:center;margin:0 0 1rem;font-weight:700;color:var(--accent);font-size:1.25rem;}
 
@@ -88,7 +88,7 @@
     
     .card{background:var(--card);border-radius:16px;padding:1.25rem;box-shadow: 0 4px 6px -1px rgba(0,0,0,.04), 0 2px 4px -2px rgba(0,0,0,.04); border:1px solid var(--border-color);}
     html.dark .card{box-shadow:none;}
-    .small-btn{padding:.5rem .6rem;border-radius:8px;cursor:pointer; background: var(--card); border:1px solid var(--border-color); font-weight: 500; transition: all .2s;}
+    .small-btn{padding:.5rem .6rem;border-radius:8px;cursor:pointer; background: var(--card); border:1px solid var(--border-color); font-weight: 500; transition: all .2s; display: inline-flex; align-items: center; gap: 4px;}
     .small-btn:hover{border-color: var(--accent); color: var(--accent); box-shadow: 0 1px 2px 0 rgba(0,0,0,.03);}
     .toast{position:fixed;right:20px;top:80px;padding:10px 16px;border-radius:10px;color:white;font-weight:600;opacity:0;z-index:60;transition: all 0.4s ease-in-out; transform: translateX(120%);}
     .toast.show{transform:translateX(0);opacity:1;}
@@ -110,7 +110,7 @@
 <body class="h-full">
 
 <svg id="favicon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="display:none;">
-  <text y=".9em" font-size="90">💼</text>
+  <text y=".9em" font-size="90">📊</text>
 </svg>
 
 <div id="chart-tooltip"></div>
@@ -119,7 +119,7 @@
   <div class="sidebar-overlay"></div>
 
   <aside class="app-sidebar">
-    <h1 class="text-xl font-bold text-indigo-700 dark:text-indigo-300 mb-6">💼 Controle Financeiro</h1>
+    <h1 class="text-xl font-bold text-indigo-700 dark:text-indigo-300 mb-6">📊 Controle Financeiro</h1>
     <nav id="sidebar-nav">
       <a data-index="0" class="nav-link active"><span>📊 Resumo</span></a>
       <a data-index="1" class="nav-link"><span>💰 Receitas</span><span id="income-badge" class="sidebar-badge hidden"></span></a>
@@ -127,9 +127,10 @@
       <a data-index="3" class="nav-link"><span>🎯 Metas</span></a>
       <a data-index="4" class="nav-link"><span>📈 Relatório Anual</span></a>
       <a data-index="5" class="nav-link"><span>📊 Gráficos</span></a>
+      <a data-index="6" class="nav-link"><span>🗑️ Lixeira</span><span id="trash-badge" class="sidebar-badge hidden"></span></a>
     </nav>
     <div class="mt-auto">
-        <div class="text-xs text-gray-500">Tema Moderno V6.4 • Gemini</div>
+        <div class="text-xs text-gray-500">Tema Moderno V6.7 • Gemini</div>
     </div>
   </aside>
 
@@ -248,7 +249,7 @@
               </div>
               <div class="card">
                  <h3 class="font-semibold mb-3 text-center">Progresso do Orçamento</h3>
-                 <div id="budget-progress-container" class="space-y-3 max-h-48 overflow-auto"></div>
+                 <div id="budget-progress-container" class="space-y-3 max-h-96 overflow-auto"></div>
               </div>
           </div>
           <div class="xl:col-span-3 card flex flex-col overflow-visible">
@@ -311,7 +312,7 @@
             <div id="annual-summary-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 </div>
             <div class="card">
-                <h3 class="font-semibold mb-3">Balanço Mensal (Ano Corrente)</h3>
+                <h3 class="font-semibold mb-3">Receitas vs. Despesas (Ano Corrente)</h3>
                 <div id="annual-balance-chart-container" style="min-height: 260px;"></div>
             </div>
             <div class="card">
@@ -328,7 +329,7 @@
         <h2 class="section-title">📊 Gráficos e Análises</h2>
         <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div class="card lg:col-span-2">
-            <h3 class="font-semibold mb-3">Evolução Anual (Realizado)</h3>
+            <h3 class="font-semibold mb-3">Evolução do Saldo Mensal (Realizado)</h3>
             <div id="line-chart-container" style="min-height:260px;"></div>
           </div>
           <div class="card">
@@ -339,6 +340,30 @@
             <h3 class="font-semibold mb-3">Distribuição de Despesas por Categoria (Realizado)</h3>
             <div id="pie-chart-container" style="min-height:220px;"></div>
           </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <h2 class="section-title">🗑️ Lixeira</h2>
+        <div class="max-w-7xl mx-auto card">
+            <div class="flex justify-between items-center mb-4">
+              <p class="text-sm text-gray-500">Itens excluídos são mantidos aqui. Você pode restaurá-los ou excluí-los permanentemente.</p>
+              <button id="empty-trash-btn" class="small-btn bg-red-500 text-white border-red-500 hover:bg-red-600 hover:text-white hover:border-red-600">Esvaziar Lixeira</button>
+            </div>
+            <div class="table-scroll h-[75vh]">
+              <table id="trash-table" class="text-sm">
+                <thead>
+                  <tr>
+                    <th class="w-1/2">Descrição</th>
+                    <th>Valor</th>
+                    <th>Tipo</th>
+                    <th>Data de Exclusão</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="trash-table-body"></tbody>
+              </table>
+            </div>
         </div>
       </section>
     </main>
@@ -479,7 +504,7 @@
 <datalist id="debtors-datalist"></datalist>
 
 <script>
-/* ========== CONTROLE FINANCEIRO V6.4 - GEMINI ========== */
+/* ========== CONTROLE FINANCEIRO V6.7 - GEMINI ========== */
 document.addEventListener('DOMContentLoaded', () => {
 
   const svg = document.getElementById('favicon-svg').outerHTML;
@@ -490,7 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- STATE & CONFIG ---------- */
   const APP_VERSION = '_v6';
   let financialData = {};
-  let incomeCategories = [], expenseCategories = [], payers = [], debtors = [], creditCards = [], goals = [];
+  let incomeCategories = [], expenseCategories = [], payers = [], debtors = [], creditCards = [], goals = [], trash = [];
   let budgets = {};
   let areValuesVisible = true;
   let currentDate = new Date();
@@ -508,15 +533,19 @@ document.addEventListener('DOMContentLoaded', () => {
   let columnSettings;
 
   const dom = {
-    // AJUSTE MOBILE: Novos elementos para o menu
-    appBody: document.getElementById('app-body'),
-    menuToggleBtn: document.getElementById('menu-toggle-btn'),
-    sidebarOverlay: document.querySelector('.sidebar-overlay'),
-    
+    appBody: document.getElementById('app-body'), menuToggleBtn: document.getElementById('menu-toggle-btn'), sidebarOverlay: document.querySelector('.sidebar-overlay'),
     incomeForm: document.getElementById('income-form'), expenseForm: document.getElementById('expense-form'), incomeTable: document.getElementById('income-table'), incomeTableHead: document.getElementById('income-table-head'), expenseTable: document.getElementById('expense-table'), expenseTableHead: document.getElementById('expense-table-head'), incomeTableFooter: document.getElementById('income-table-footer'), expenseTableFooter: document.getElementById('expense-table-footer'), incomeCategoryFilter: document.getElementById('income-category-filter'), expenseCategoryFilter: document.getElementById('expense-category-filter'), incomeSearch: document.getElementById('income-search'), expenseSearch: document.getElementById('expense-search'), incomeCard: document.getElementById('income-card'), expenseCard: document.getElementById('expense-card'), balanceCard: document.getElementById('balance-card'), prevBalanceCard: document.getElementById('prev-balance-card'), budgetCard: document.getElementById('budget-card'), cardSummaryContainer: document.getElementById('card-summary-container'), toast: document.getElementById('toast'), themeToggle: document.getElementById('theme-toggle'), valuesToggle: document.getElementById('values-toggle'), exportExcelBtn: document.getElementById('export-excel'), importExcelBtn: document.getElementById('import-excel-btn'), importExcelInput: document.getElementById('import-excel-input'), prevMonthBtn: document.getElementById('prev-month'), nextMonthBtn: document.getElementById('next-month'), monthDisplay: document.getElementById('current-month-display'), manageCategoriesBtn: document.getElementById('manage-categories-btn'), categoryModal: document.getElementById('category-modal'), closeCategoryModalBtn: document.getElementById('close-category-modal'), incomeCategoryList: document.getElementById('income-category-list'), expenseCategoryList: document.getElementById('expense-category-list'), addIncomeCategoryForm: document.getElementById('add-income-category-form'), addExpenseCategoryForm: document.getElementById('add-expense-category-form'), sidebarNav: document.getElementById('sidebar-nav'), horizontalContainer: document.getElementById('horizontal-container'), editModal: document.getElementById('edit-modal'), editModalContent: document.getElementById('edit-modal-content'), columnsModal: document.getElementById('columns-modal'), columnsList: document.getElementById('columns-list'), closeColumnsModalBtn: document.getElementById('close-columns-modal'), incomeColsBtn: document.getElementById('income-cols-btn'), expenseColsBtn: document.getElementById('expense-cols-btn'), incomeBulkActions: document.getElementById('income-bulk-actions'), expenseBulkActions: document.getElementById('expense-bulk-actions'), incomeCardFilter: document.getElementById('income-card-filter'), incomeSourceFilter: document.getElementById('income-source-filter'), incomePaymentDateFilter: document.getElementById('income-payment-date-filter'), incomeRegistrationDateFilter: document.getElementById('income-registration-date-filter'), incomeClearFiltersBtn: document.getElementById('income-clear-filters-btn'), expenseCardFilter: document.getElementById('expense-card-filter'), expenseSourceFilter: document.getElementById('expense-source-filter'), expensePaymentDateFilter: document.getElementById('expense-payment-date-filter'), expenseRegistrationDateFilter: document.getElementById('expense-registration-date-filter'), expenseClearFiltersBtn: document.getElementById('expense-clear-filters-btn'), manageCardsBtn: document.getElementById('manage-cards-btn'), cardsModal: document.getElementById('cards-modal'), closeCardsModalBtn: document.getElementById('close-cards-modal'), addCardForm: document.getElementById('add-card-form'), cardsList: document.getElementById('cards-list'), chartTooltip: document.getElementById('chart-tooltip'), incomeBadge: document.getElementById('income-badge'), expenseBadge: document.getElementById('expense-badge'), manageBudgetBtn: document.getElementById('manage-budget-btn'), budgetModal: document.getElementById('budget-modal'), budgetForm: document.getElementById('budget-form'), budgetModalMonth: document.getElementById('budget-modal-month'), closeBudgetModalBtn: document.getElementById('close-budget-modal'), saveBudgetBtn: document.getElementById('save-budget-btn'), replicateBudgetBtn: document.getElementById('replicate-budget-btn'), budgetProgressContainer: document.getElementById('budget-progress-container'), addGoalForm: document.getElementById('add-goal-form'), goalsListContainer: document.getElementById('goals-list-container'), manageSourcesBtn: document.getElementById('manage-sources-btn'), sourcesModal: document.getElementById('sources-modal'), closeSourcesModalBtn: document.getElementById('close-sources-modal'), addPayerForm: document.getElementById('add-payer-form'), addDebtorForm: document.getElementById('add-debtor-form'), payersList: document.getElementById('payers-list'), debtorsList: document.getElementById('debtors-list'), payersDatalist: document.getElementById('payers-datalist'), debtorsDatalist: document.getElementById('debtors-datalist'), editGoalModal: document.getElementById('edit-goal-modal'), editGoalForm: document.getElementById('edit-goal-form'), closeEditGoalModalBtn: document.getElementById('close-edit-goal-modal'), importBackupBtn: document.getElementById('import-backup-btn'), exportBackupBtn: document.getElementById('export-backup-btn'), importBackupInput: document.getElementById('import-backup-input'),
+    trashTableBody: document.getElementById('trash-table-body'), emptyTrashBtn: document.getElementById('empty-trash-btn'), trashBadge: document.getElementById('trash-badge'),
   };
 
-  const ICONS = { edit: '✏️', del: '❌', duplicate: '📄' };
+  const ICONS = {
+    edit: `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z" /></svg>`,
+    del: `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`,
+    duplicate: `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>`,
+    restore: `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l4-4m-4 4l4 4" /></svg>`,
+    permDel: `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`,
+  };
+
   const DEFAULT_INCOME_CATEGORIES = ["Salário","Vendas","Freelance","Investimentos","Renda Extra"];
   const DEFAULT_EXPENSE_CATEGORIES = ["Moradia","Transporte","Alimentação","Saúde","Lazer","Educação","Dívidas","Investimentos","Outros"];
   const DEFAULT_PAYERS = ["Empresa X"];
@@ -541,6 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
       creditCards = getItem('creditCards', []);
       budgets = getItem('budgets', {});
       goals = getItem('goals', []);
+      trash = getItem('trash', []);
       columnSettings = getItem('columnSettings', JSON.parse(JSON.stringify(DEFAULT_COLUMN_SETTINGS)));
       
       areValuesVisible = localStorage.getItem('financialValuesVisible' + APP_VERSION) !== 'false';
@@ -553,7 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const setItem = (key, data) => localStorage.setItem(key + APP_VERSION, JSON.stringify(data));
       setItem('financialData', financialData); setItem('incomeCategories', incomeCategories); setItem('expenseCategories', expenseCategories); setItem('payers', payers);
-      setItem('debtors', debtors); setItem('creditCards', creditCards); setItem('budgets', budgets); setItem('goals', goals); setItem('columnSettings', columnSettings);
+      setItem('debtors', debtors); setItem('creditCards', creditCards); setItem('budgets', budgets); setItem('goals', goals); setItem('trash', trash); setItem('columnSettings', columnSettings);
       localStorage.setItem('financialValuesVisible' + APP_VERSION, areValuesVisible);
       localStorage.setItem('theme' + APP_VERSION, document.documentElement.classList.contains('dark') ? 'dark' : 'light');
     } catch(e){ console.error('saveData', e); showToast('Erro ao salvar dados','error'); }
@@ -675,7 +705,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalExpense = (data.expenses || []).reduce((s,e)=>s+e.value,0), paidExpense = (data.expenses || []).filter(e=>e.isPaid).reduce((s,e)=>s+e.value,0);
     dom.expenseCard.innerHTML = `<div><h4 class="text-sm text-gray-500">Despesa Prevista</h4><div class="text-2xl font-bold">${displayCurrency(totalExpense)}</div><div class="text-xs text-red-600 dark:text-red-400">${displayCurrency(paidExpense)} realizado</div></div>`;
     
-    // NOVO: Renderização do Card de Orçamento
     const monthBudgets = budgets[currentMonthKey] || {};
     const totalBudget = Object.values(monthBudgets).reduce((s, b) => s + b, 0);
     if (totalBudget > 0) {
@@ -738,7 +767,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filtered = sortedItems.filter(i => (i.description.toLowerCase().includes(currentFilters.search) || (i[sourceKey] && i[sourceKey].toLowerCase().includes(currentFilters.search))) && (currentFilters.category === 'all' || i.category === currentFilters.category) && (currentFilters.card === 'all' || (i.card || '') === currentFilters.card) && (currentFilters.source === 'all' || (i[sourceKey] || '') === currentFilters.source) && (!currentFilters.paymentDate || i.paymentDate === currentFilters.paymentDate) && (!currentFilters.registrationDate || i.registrationDate === currentFilters.registrationDate) );
     const body = dom[`${type}Table`];
     if (filtered.length === 0) { const colCount = Object.values(settings).filter(c => c.visible).length; body.innerHTML = `<tr><td colspan="${colCount}" class="text-center py-4 text-gray-500">Nenhum lançamento encontrado.</td></tr>`; }
-    else { body.innerHTML = filtered.map(item => { let cells = ''; for (const [key, col] of Object.entries(settings)) { if (!col.visible) continue; let content = '', align = 'text-left'; switch(key) { case 'pago': content = `<input class="status-checkbox" type="checkbox" data-id="${item.id}" data-type="${type}" ${item.isPaid?'checked':''}>`; align = 'text-center'; break; case 'description': content = escapeHtml(item.description); break; case 'payer': case 'debtor': content = escapeHtml(item[key] || '-'); break; case 'installment': content = item.isRecurring ? 'Recorrente' : (escapeHtml(item.installment || '-')); break; case 'registrationDate': case 'paymentDate': content = formatDate(item[key]); break; case 'card': content = escapeHtml(item.card || '-'); break; case 'category': content = escapeHtml(item.category || '-'); break; case 'value': content = `<span class="${item.isPaid ? 'text-green-600 dark:text-green-400' : ''}">${displayCurrency(item.value)}</span>`; align = 'text-right'; break; case 'actions': content = `<button data-action="duplicate" data-id="${item.id}" data-type="${type}" class="px-1" title="Duplicar">${ICONS.duplicate}</button><button data-action="edit" data-id="${item.id}" data-type="${type}" class="px-1" title="Editar">${ICONS.edit}</button><button data-action="delete" data-id="${item.id}" data-type="${type}" class="px-1" title="Excluir">${ICONS.del}</button>`; align = 'text-center'; break; } cells += `<td class="${align}" title="${escapeHtml(item.description)}">${content}</td>`; } return `<tr class="${getRowClasses(item)}" data-id="${item.id}">${cells}</tr>`; }).join(''); }
+    else { body.innerHTML = filtered.map(item => { let cells = ''; for (const [key, col] of Object.entries(settings)) { if (!col.visible) continue; let content = '', align = 'text-left'; switch(key) { case 'pago': content = `<input class="status-checkbox" type="checkbox" data-id="${item.id}" data-type="${type}" ${item.isPaid?'checked':''}>`; align = 'text-center'; break; case 'description': content = escapeHtml(item.description); break; case 'payer': case 'debtor': content = escapeHtml(item[key] || '-'); break; case 'installment': content = item.isRecurring ? 'Recorrente' : (escapeHtml(item.installment || '-')); break; case 'registrationDate': case 'paymentDate': content = formatDate(item[key]); break; case 'card': content = escapeHtml(item.card || '-'); break; case 'category': content = escapeHtml(item.category || '-'); break; case 'value': content = `<span class="${item.isPaid ? 'text-green-600 dark:text-green-400' : ''}">${displayCurrency(item.value)}</span>`; align = 'text-right'; break; case 'actions': content = `<div class="flex justify-center items-center gap-2"><button data-action="duplicate" data-id="${item.id}" data-type="${type}" class="px-1" title="Duplicar">${ICONS.duplicate}</button><button data-action="edit" data-id="${item.id}" data-type="${type}" class="px-1" title="Editar">${ICONS.edit}</button><button data-action="delete" data-id="${item.id}" data-type="${type}" class="px-1" title="Excluir">${ICONS.del}</button></div>`; align = 'text-center'; break; } cells += `<td class="${align}" title="${escapeHtml(item.description)}">${content}</td>`; } return `<tr class="${getRowClasses(item)}" data-id="${item.id}">${cells}</tr>`; }).join(''); }
     const total = filtered.reduce((s,i)=>s+i.value,0), paid = filtered.filter(i=>i.isPaid).reduce((s,i)=>s+i.value,0), colspan = Object.values(settings).filter(c => c.visible).length - 2;
     dom[`${type}TableFooter`].innerHTML = `<tr class="border-t"><td colspan="${colspan}" class="text-right px-2 py-1 font-semibold">Total Pago:</td><td class="text-right px-2 py-1 font-semibold ${type==='income'?'text-green-600 dark:text-green-400':'text-red-600 dark:text-red-400'}">${displayCurrency(paid)}</td><td></td></tr><tr><td colspan="${colspan}" class="text-right px-2 py-1">Total Pendente:</td><td class="text-right px-2 py-1 text-yellow-600">${displayCurrency(total-paid)}</td><td></td></tr><tr class="bg-gray-100 dark:bg-slate-800"><td colspan="${colspan}" class="text-right px-2 py-2 font-bold">TOTAL:</td><td class="text-right px-2 py-2 font-bold">${displayCurrency(total)}</td><td></td></tr>`;
   }
@@ -775,15 +804,21 @@ document.addEventListener('DOMContentLoaded', () => {
   function deleteItem(id, type) {
     const result = findItemMonthKey(id); if (!result) return;
     const list = type === 'income' ? financialData[result.key].incomes : financialData[result.key].expenses;
-    const item = list.find(i => i.id === id); if (!item) return;
-    if (item.seriesId) { if(confirm("Este item faz parte de uma série. Deseja excluir apenas este ou todos os futuros? \n\n[OK] para Todos, [Cancelar] para Apenas este.")) { Object.values(financialData).forEach(monthData => { const currentList = (type === 'income' ? monthData.incomes : monthData.expenses); if(currentList) monthData[type === 'income' ? 'incomes' : 'expenses'] = currentList.filter(i => !(i.seriesId === item.seriesId && i.paymentDate >= item.paymentDate)); }); showToast('Item e futuros lançamentos da série removidos.', 'info'); } else { const index = list.findIndex(i => i.id === id); if (index > -1) list.splice(index, 1); showToast('Apenas este item foi removido.', 'success'); }
-    } else { if (!confirm('Deseja realmente excluir este item?')) return; const index = list.findIndex(i => i.id === id); if (index > -1) list.splice(index, 1); showToast('Item removido.', 'success'); }
-    saveData(); updateDashboard();
+    const itemIndex = list.findIndex(i => i.id === id);
+    if (itemIndex === -1) return;
+    
+    const [item] = list.splice(itemIndex, 1);
+    trash.push({ ...item, deletedDate: new Date().toISOString(), originalType: type });
+    showToast('Item movido para a lixeira.', 'info');
+    
+    saveData();
+    updateDashboard();
   }
+
   function handleDuplicateItem(id, type) {
     const result = findItemMonthKey(id); if (!result) return; const item = (type === 'income' ? financialData[result.key].incomes : financialData[result.key].expenses).find(i => i.id === id); if (!item) return;
     const form = type === 'income' ? dom.incomeForm : dom.expenseForm; form.querySelector('[name="description"]').value = item.description; form.querySelector('[name="source"]').value = type === 'income' ? item.payer : item.debtor; form.querySelector('[name="value"]').value = item.value; form.querySelector('[name="registrationDate"]').value = new Date().toISOString().split('T')[0]; form.querySelector('[name="paymentDate"]').value = new Date().toISOString().split('T')[0]; form.querySelector('[name="card"]').value = item.card || ''; form.querySelector('[name="category"]').value = item.category;
-    showToast("Item duplicado. Ajuste os detalhes e adicione.", 'info'); dom.horizontalContainer.scrollTo(window.innerWidth * (type === 'income' ? 1 : 2), 0); form.querySelector('[name="description"]').focus();
+    showToast("Item duplicado. Ajuste os detalhes e adicione.", 'info'); dom.horizontalContainer.scrollTo({ left: window.innerWidth * (type === 'income' ? 1 : 2), behavior: 'smooth' }); form.querySelector('[name="description"]').focus();
   }
   function togglePaidStatus(id, type, isPaid) { const result = findItemMonthKey(id); if (!result) return; const item = (type === 'income' ? financialData[result.key].incomes : financialData[result.key].expenses).find(i => i.id === id); if (item) { item.isPaid = isPaid; saveData(); updateDashboard(); } }
 
@@ -809,6 +844,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- COLUMNS MANAGEMENT ---------- */
   function openColumnsModal(type) { const settings = columnSettings[type]; dom.columnsList.innerHTML = Object.entries(settings).map(([key, col]) => (key === 'actions') ? '' : `<label class="flex items-center gap-2"><input type="checkbox" data-type="${type}" data-col-key="${key}" ${col.visible ? 'checked' : ''}>${col.label}</label>`).join(''); dom.columnsModal.classList.remove('hidden'); }
+
+  /* ---------- TRASH ---------- */
+  function renderTrash() {
+      if (trash.length === 0) {
+          dom.trashTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-gray-500">A lixeira está vazia.</td></tr>';
+          return;
+      }
+      dom.trashTableBody.innerHTML = trash.map(item => `
+          <tr>
+              <td>${escapeHtml(item.description)}</td>
+              <td class="text-right">${displayCurrency(item.value)}</td>
+              <td>${item.originalType === 'income' ? 'Receita' : 'Despesa'}</td>
+              <td>${formatDate(item.deletedDate.split('T')[0])}</td>
+              <td class="text-center">
+                  <div class="flex justify-center items-center gap-2">
+                    <button data-action="restore-item" data-id="${item.id}" title="Restaurar" class="px-2">${ICONS.restore}</button>
+                    <button data-action="perm-delete-item" data-id="${item.id}" title="Excluir Permanentemente" class="px-2">${ICONS.permDel}</button>
+                  </div>
+              </td>
+          </tr>
+      `).join('');
+  }
+  function restoreItem(id) {
+    const itemIndex = trash.findIndex(item => item.id === id);
+    if (itemIndex === -1) return;
+    const [item] = trash.splice(itemIndex, 1);
+    const type = item.originalType;
+    delete item.deletedDate;
+    delete item.originalType;
+    const key = item.paymentDate.substring(0, 7);
+    if (!financialData[key]) financialData[key] = { incomes: [], expenses: [] };
+    financialData[key][type === 'income' ? 'incomes' : 'expenses'].push(item);
+    saveData();
+    updateDashboard();
+    showToast("Item restaurado com sucesso!");
+  }
+  function permanentlyDeleteItem(id) {
+      if (!confirm("Tem certeza que deseja excluir este item permanentemente? Esta ação não pode ser desfeita.")) return;
+      trash = trash.filter(item => item.id !== id);
+      saveData();
+      updateDashboard();
+      showToast("Item excluído permanentemente.");
+  }
+  function emptyTrash() {
+      if (trash.length === 0) {
+          showToast("A lixeira já está vazia.", "info");
+          return;
+      }
+      if (!confirm(`Tem certeza que deseja esvaziar a lixeira? ${trash.length} itens serão excluídos permanentemente.`)) return;
+      trash = [];
+      saveData();
+      updateDashboard();
+      showToast("Lixeira esvaziada.");
+  }
+
 
   /* ---------- CHARTS (D3.js) ---------- */
   function renderAllCharts() { const currentData = financialData[currentMonthKey] || { incomes: [], expenses: [] }; const chartFuncs = [ () => drawDonutChart('income-category-chart-container', currentData, 'income'), () => drawDonutChart('pie-chart-container', currentData, 'expense'), () => drawBarChart(), () => drawLineChart(), () => renderAnnualSummary() ]; chartFuncs.forEach(func => { try { func(); } catch (e) { console.error(`Chart Error (${func.name}):`, e); }}); }
@@ -892,9 +982,15 @@ document.addEventListener('DOMContentLoaded', () => {
     for(const key of sortedKeys){ if(key >= currentMonthKey) break; const prevData = financialData[key] || {}; prevMonthBalance += ((prevData.incomes || []).filter(i=>i.isPaid).reduce((s,i)=>s+i.value,0)) - ((prevData.expenses || []).filter(e=>e.isPaid).reduce((s,e)=>s+e.value,0)); }
     const currentData = financialData[currentMonthKey];
     populateDynamicFilters(currentData); renderSummaryCards(currentData, prevMonthBalance); renderCardSummary(currentData); renderAllTables(currentData);
-    updateSidebarBadges(); renderBudgetProgress(); renderGoalsPage(); renderAllCharts(); updateBulkActionVisibility('income'); updateBulkActionVisibility('expense'); updateSourceDatalists();
+    updateSidebarBadges(); renderBudgetProgress(); renderGoalsPage(); renderAllCharts(); renderTrash(); updateBulkActionVisibility('income'); updateBulkActionVisibility('expense'); updateSourceDatalists();
   }
-  function updateSidebarBadges() { const data = financialData[currentMonthKey] || {}; const inc = (data.incomes || []).filter(i => !i.isPaid).length, exp = (data.expenses || []).filter(e => !e.isPaid).length; dom.incomeBadge.textContent = inc; dom.incomeBadge.classList.toggle('hidden', inc === 0); dom.expenseBadge.textContent = exp; dom.expenseBadge.classList.toggle('hidden', exp === 0); }
+  function updateSidebarBadges() { 
+      const data = financialData[currentMonthKey] || {}; 
+      const inc = (data.incomes || []).filter(i => !i.isPaid).length, exp = (data.expenses || []).filter(e => !e.isPaid).length; 
+      dom.incomeBadge.textContent = inc; dom.incomeBadge.classList.toggle('hidden', inc === 0); 
+      dom.expenseBadge.textContent = exp; dom.expenseBadge.classList.toggle('hidden', exp === 0); 
+      dom.trashBadge.textContent = trash.length; dom.trashBadge.classList.toggle('hidden', trash.length === 0);
+  }
 
   /* ---------- BUDGETS ---------- */
   function renderBudgetSetup() { const monthBudgets = budgets[currentMonthKey] || {}; dom.budgetModalMonth.textContent = new Date(currentMonthKey+'-02').toLocaleDateString('pt-BR',{month:'long',year:'numeric'}); dom.budgetForm.innerHTML = expenseCategories.map(cat => `<div class="grid grid-cols-3 items-center gap-2"><label class="col-span-2">${escapeHtml(cat)}</label><input type="number" step="0.01" data-category="${escapeHtml(cat)}" value="${monthBudgets[cat] || ''}" placeholder="R$ 0,00" class="col-span-1 text-right"></div>`).join(''); dom.budgetModal.classList.remove('hidden'); }
@@ -919,20 +1015,22 @@ document.addEventListener('DOMContentLoaded', () => {
     drawAnnualBalanceChart(yearData);
   }
   function drawAnnualBalanceChart(yearData) {
-      const container = document.getElementById('annual-balance-chart-container'); if (!container) return; container.innerHTML = '';
-      const series = Object.entries(yearData).map(([k, d]) => ({ k, ...d }));
-      const w=container.clientWidth,h=260, m={top:20,right:20,bottom:40,left:50}; const svg = d3.select(container).append('svg').attr('viewBox',`0 0 ${w} ${h}`).style('width','100%');
-      const yDomain = d3.extent(series, d => d.bal); const yBuffer = Math.max(Math.abs(yDomain[0] || 0), Math.abs(yDomain[1] || 0)) * 0.1;
-      const x = d3.scaleBand().domain(series.map(d=>d.k)).range([m.left,w-m.right]).padding(0.3); const y = d3.scaleLinear().domain([(yDomain[0] || 0) - yBuffer, (yDomain[1] || 0) + yBuffer]).nice().range([h-m.bottom,m.top]); const isDark = document.documentElement.classList.contains('dark');
-      svg.append('g').selectAll("rect").data(series).join("rect").attr("x", d => x(d.k)).attr("y", d => d.bal >= 0 ? y(d.bal) : y(0)).attr("width", x.bandwidth()).attr("height", d => Math.abs(y(d.bal) - y(0))).attr("fill", d => d.bal >= 0 ? (isDark ? '#34d399' : '#10b981') : (isDark ? '#f87171' : '#ef4444'));
-      svg.append("line").attr("x1", m.left).attr("x2", w-m.right).attr("y1", y(0)).attr("y2", y(0)).attr("stroke", "var(--muted)").attr("stroke-width", 0.5);
-      svg.append('g').attr('transform',`translate(0,${h-m.bottom})`).call(d3.axisBottom(x).tickFormat(d => new Date(d+'-02').toLocaleString('pt-BR',{month:'short'}))); svg.append('g').attr('transform',`translate(${m.left},0)`).call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("~s")));
+    const container = document.getElementById('annual-balance-chart-container'); if (!container) return; container.innerHTML = '';
+    const series = Object.entries(yearData).map(([k, d]) => ({ k, ...d }));
+    const w=container.clientWidth,h=260, m={top:20,right:20,bottom:40,left:50}; const svg = d3.select(container).append('svg').attr('viewBox',`0 0 ${w} ${h}`).style('width','100%');
+    const x0 = d3.scaleBand().domain(series.map(d=>d.k)).range([m.left,w-m.right]).padding(0.2);
+    const x1 = d3.scaleBand().domain(['inc','exp']).range([0,x0.bandwidth()]).padding(0.05);
+    const y = d3.scaleLinear().domain([0, d3.max(series, d => Math.max(d.inc, d.exp)) || 1]).nice().range([h-m.bottom,m.top]);
+    const isDark = document.documentElement.classList.contains('dark');
+    const color = d3.scaleOrdinal().domain(['inc','exp']).range([isDark?'#34d399':'#10b981', isDark?'#f87171':'#ef4444']);
+    svg.append('g').selectAll('g').data(series).join('g').attr('transform',d=>`translate(${x0(d.k)},0)`).selectAll('rect').data(d=>['inc','exp'].map(k=>({key:k,value:d[k]}))).join('rect').attr('x',d=>x1(d.key)).attr('y',d=>y(d.value)).attr('width',x1.bandwidth()).attr('height',d=>y(0)-y(d.value)).attr('fill',d=>color(d.key));
+    svg.append('g').attr('transform',`translate(0,${h-m.bottom})`).call(d3.axisBottom(x0).tickFormat(d => new Date(d+'-02').toLocaleString('pt-BR',{month:'short'})));
+    svg.append('g').attr('transform',`translate(${m.left},0)`).call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("~s")));
   }
 
 
   /* ---------- EVENT LISTENERS ---------- */
   function setupEventListeners(){
-    // AJUSTE MOBILE: Listeners para o menu
     const toggleSidebar = () => dom.appBody.classList.toggle('sidebar-open');
     dom.menuToggleBtn.addEventListener('click', toggleSidebar);
     dom.sidebarOverlay.addEventListener('click', toggleSidebar);
@@ -946,18 +1044,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
     document.addEventListener('click', e => {
       const btn = e.target.closest('button[data-action]');
-      if (e.target.id === 'go-to-budget-setup') { // Listener para o novo botão do card de orçamento
-          renderBudgetSetup();
-          return;
-      }
+      if (e.target.id === 'go-to-budget-setup') { renderBudgetSetup(); return; }
       if (!btn) return;
       const { action, id, type } = btn.dataset;
-      if (action === 'edit') openEditModal(Number(id), type);
-      else if (action === 'delete') deleteItem(Number(id), type);
-      else if (action === 'duplicate') handleDuplicateItem(Number(id), type);
-      else if (action === 'delete-goal' && confirm("Excluir meta?")) { goals = goals.filter(g => g.id !== Number(id)); saveData(); renderGoalsPage(); }
-      else if (action === 'edit-goal') openEditGoalModal(Number(id));
-      else if (action === 'add-contribution') { const amount = parseFloat(prompt("Valor a adicionar?")); if (!isNaN(amount) && amount > 0) { const goal = goals.find(g => g.id === Number(id)); if(goal) { goal.current = Math.min(goal.target, goal.current + amount); saveData(); renderGoalsPage(); } } }
+      const numId = Number(id);
+      if (action === 'edit') openEditModal(numId, type);
+      else if (action === 'delete') deleteItem(numId, type);
+      else if (action === 'duplicate') handleDuplicateItem(numId, type);
+      else if (action === 'delete-goal' && confirm("Excluir meta?")) { goals = goals.filter(g => g.id !== numId); saveData(); renderGoalsPage(); }
+      else if (action === 'edit-goal') openEditGoalModal(numId);
+      else if (action === 'add-contribution') { const amount = parseFloat(prompt("Valor a adicionar?")); if (!isNaN(amount) && amount > 0) { const goal = goals.find(g => g.id === numId); if(goal) { goal.current = Math.min(goal.target, goal.current + amount); saveData(); renderGoalsPage(); } } }
+      else if (action === 'restore-item') restoreItem(numId);
+      else if (action === 'perm-delete-item') permanentlyDeleteItem(numId);
     });
     
     document.addEventListener('change', e => {
@@ -971,26 +1069,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const isChecked = e.target.checked;
         const tableBody = document.getElementById(`${type}-table`);
         const visibleCheckboxes = tableBody.querySelectorAll('tr .status-checkbox');
-        let itemsChanged = 0;
-
-        visibleCheckboxes.forEach(cb => {
-            const id = Number(cb.dataset.id);
-            const result = findItemMonthKey(id);
-            if (!result) return;
-            const item = (type === 'income' ? financialData[result.key].incomes : financialData[result.key].expenses).find(i => i.id === id);
-            if (item && item.isPaid !== isChecked) {
+    
+        if (visibleCheckboxes.length === 0) return;
+    
+        const visibleItemIds = new Set(Array.from(visibleCheckboxes).map(cb => Number(cb.dataset.id)));
+    
+        const list = (type === 'income' ? financialData[currentMonthKey].incomes : financialData[currentMonthKey].expenses) || [];
+    
+        let itemsUpdatedCount = 0;
+        list.forEach(item => {
+            if (visibleItemIds.has(item.id) && item.isPaid !== isChecked) {
                 item.isPaid = isChecked;
-                itemsChanged++;
+                itemsUpdatedCount++;
             }
         });
-
-        if (itemsChanged > 0) {
+    
+        if (itemsUpdatedCount > 0) {
             saveData();
             updateDashboard();
-            showToast(`${itemsChanged} itens foram atualizados!`, 'info');
-        } else {
-            visibleCheckboxes.forEach(cb => cb.checked = isChecked);
-            updateBulkActionVisibility(type);
+            showToast(`${itemsUpdatedCount} itens foram atualizados.`, 'info');
         }
       }
     });
@@ -1021,18 +1118,19 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.fixed.inset-0').forEach(m => { m.addEventListener('click', e => { if(e.target === m) m.classList.add('hidden'); }); });
     dom.horizontalContainer.addEventListener('scroll', ()=>{ const idx = Math.round(dom.horizontalContainer.scrollLeft / window.innerWidth); dom.sidebarNav.querySelectorAll('.nav-link').forEach((d,i)=> d.classList.toggle('active', i===idx)); });
     
-    // Atualiza o listener do nav para fechar o menu no mobile
     dom.sidebarNav.addEventListener('click', e => { 
         const link = e.target.closest('.nav-link'); 
         if (link) {
-            dom.horizontalContainer.scrollTo(window.innerWidth * link.dataset.index, 0);
-            if (window.innerWidth <= 768) { // Fecha a sidebar após clicar em um link no mobile
+            dom.horizontalContainer.scrollTo({ left: window.innerWidth * link.dataset.index, behavior: 'smooth' });
+            if (window.innerWidth <= 768) {
                 toggleSidebar();
             }
         }
     });
 
     dom.incomeBulkActions.addEventListener('click', e => { if(e.target.dataset.action) handleBulkAction('income', e.target.dataset.action); }); dom.expenseBulkActions.addEventListener('click', e => { if(e.target.dataset.action) handleBulkAction('expense', e.target.dataset.action); });
+    dom.emptyTrashBtn.addEventListener('click', emptyTrash);
+
     let thElm, startOffset;
     document.addEventListener('mousedown', e => { if (e.target.classList.contains('resize-handle')) { thElm = e.target.parentElement; startOffset = thElm.offsetWidth - e.pageX; }});
     document.addEventListener('mousemove', e => { if (thElm) thElm.style.width = startOffset + e.pageX + 'px'; });
